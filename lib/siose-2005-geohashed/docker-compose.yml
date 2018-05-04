@@ -1,19 +1,6 @@
 version: '2'
 services:
 
-  ogr:
-    image: geodata/gdal
-    container_name: ogr2ogr
-    entrypoint: /bin/sh
-    stdin_open: true
-    tty: true
-    volumes:
-      - ./outputs:/outputs # Your sources will be here
-    networks:
-      - backend
-    restart: unless-stopped
-#    command: bash -c "ogrinfo -ro "PG:host=dbm dbname=db user=postgres password=postgres" -sql "SELECT * from roi"
-
   dbm:
     # comment on build if want to use the dockerhub build
     build:

@@ -8,6 +8,8 @@ WORKDIR /data
 RUN wget https://www.dropbox.com/s/d1rukoz1qv6ldu7/castellon.tar.gz \
 && tar zxvpf castellon.tar.gz && rm castellon.tar.gz
 
+RUN wget https://www.sigua.ua.es/siose/dump-castellon/dump2005-castellon.dump
+
 WORKDIR /
 
 
