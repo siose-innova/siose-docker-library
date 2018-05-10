@@ -1,11 +1,6 @@
-include mk/1*.mk
-include mk/2*.mk
-include mk/3*.mk
-include mk/4*.mk
-include mk/5*.mk
-include mk/6*.mk
-include mk/7*.mk
-include mk/8*.mk
+
+include $(sort $(wildcard mk/*.mk))
+
 
 ## Build and push all images to the registry.
 all: pull-all build-all push-all
