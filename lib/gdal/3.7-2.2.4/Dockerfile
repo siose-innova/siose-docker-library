@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:3.7
 
 ENV GDAL_VERSION 2.2.4
 

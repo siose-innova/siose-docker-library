@@ -1,4 +1,4 @@
-FROM sioseinnova/siose-2005
+FROM siose-2005:10-2.4
 
 ###################
 # Install geohash #

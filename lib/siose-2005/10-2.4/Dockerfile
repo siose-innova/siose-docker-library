@@ -1,4 +1,4 @@
-FROM sioseinnova/postgis-ext
+FROM postgis-ext:10-2.4
 
 #################
 # Download data #

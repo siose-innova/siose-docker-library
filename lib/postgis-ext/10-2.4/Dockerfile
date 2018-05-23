@@ -1,4 +1,4 @@
-FROM sioseinnova/postgres-ext
+FROM postgres-ext:10
 
 ENV POSTGIS_MAJOR 2.4
 

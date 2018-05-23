@@ -12,34 +12,43 @@ checkdirs: $(dirs)
 $(dirs):
 	mkdir -p $@
 
-dockerfiles := $(wildcard $(lib_dir)/*/Dockerfile)
-names       := $(patsubst $(lib_dir)/%/Dockerfile,%,$(dockerfiles))
-images      := $(addprefix $(vendor)/,$(names))
+dockerfiles := $(wildcard $(lib_dir)/*/*/Dockerfile) # lib/name/tag/Dockerfile
+names       := $(patsubst $(lib_dir)/%/Dockerfile,%,$(dockerfiles)) # name/tag
+#images_long := $(addprefix $(vendor)/,$(names)) #vendor/name/tag
+images      := $(subst /,..,$(names)) #name..tag
+
 
 # Stamp files for cleaning targets
 built_stamps  := $(wildcard $(stamps_dir)/built-*)
 pulled_stamps := $(wildcard $(stamps_dir)/pulled-*)
 pushed_stamps := $(wildcard $(stamps_dir)/pushed-*)
 
-built  := $(patsubst $(stamps_dir)/built-%,$(vendor)/%,$(built_stamps))
+built  := $(patsubst $(stamps_dir)/built-%,%,$(built_stamps))
 pulled := $(patsubst $(stamps_dir)/pulled-%,%,$(pulled_stamps))
 pushed := $(patsubst $(stamps_dir)/pushed-%,%,$(pushed_stamps))
 
 #--------
 # DEFINE
 #--------
+# TODO: We are only considering images without vendor. Local SI and oficial images.
+# TODO: Separate official, base images (local or dockerhub) and target images.
+
 define check-images-from
 # Check the FROM clause for each dockerfile
-# Image Name (without vendor)
-imagename_$1=$(notdir $1)
+#imagevendor
+imagename_$1 = $(word 1, $(subst .., ,$1))
+imagetag_$1  = $(word 2, $(subst .., ,$1))
+image_$1 = $$(imagename_$1)..$$(imagetag_$1)
 
 # path to Dockerfile
-dockerfile_$1=$(lib_dir)/$$(imagename_$1)/Dockerfile
+dockerfile_$1=$(lib_dir)/$$(imagename_$1)/$$(imagetag_$1)/Dockerfile
 
 # FROM Docker Image
-from_$1=$$(shell sed -n 's/FROM *//p;q;' $$(dockerfile_$1))
+#fromvendor
+fromname_$1 = $$(shell sed -n 's/.* \(.*\):.*/\1/p;q;' $$(dockerfile_$1))
+fromtag_$1  = $$(shell sed -n 's/FROM *\(.*\)://p;q;' $$(dockerfile_$1))
+from_$1     = $$(fromname_$1)..$$(fromtag_$1)
 
-# TODO: Separate official, base images (local or dockerhub) and target images.
 # Check whether a "FROM dependency" can be built from this library or not
 ifneq (,$$(filter $$(from_$1),$(images)))
 	# Base images found in this lib

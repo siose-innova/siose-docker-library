@@ -1,4 +1,4 @@
-FROM postgres
+FROM postgres:10
 
 # Install packages required for developing extensions on Postgres
 RUN apt-get update \
