@@ -5,7 +5,7 @@ define get-clean-rule
 ## Clean one single image, if it was created by this makefile. Replace $1 by the image name you want to remove (e.g. make clean-alpine-bash..3.4).
 clean-$1:
 	@echo 'Cleaning $1...'
-	@$(DOCKER_RMI) $1 && rm $(stamps_dir)/built-$1
+	@$(DOCKER_RMI) $$(subst ..,:,$1) && rm $(stamps_dir)/built-$1
 
 clean_targets+= clean-$1
 
